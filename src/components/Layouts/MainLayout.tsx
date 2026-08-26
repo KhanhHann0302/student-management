@@ -4,7 +4,7 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, ConfigProvider, Layout, Menu, theme } from 'antd';
 import Link from 'antd/es/typography/Link';
 
-
+//layout chính
 const { Header, Content, Footer, Sider } = Layout;
 //thanh menu ngang trên cùng
 const items1: MenuProps['items'] = [
