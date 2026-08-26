@@ -236,6 +236,7 @@ const TableStudent: React.FC = () => {
                         <Row gutter={[16, 16]}>
 
                             <Col span={12}>
+                                {/* Form.Item để bọc ô nhập dữ liệu */}
                                 <Form.Item name="name">
                                     <Input placeholder="Họ và tên" />
                                 </Form.Item>
@@ -313,6 +314,7 @@ const TableStudent: React.FC = () => {
                                     }}
                                 >
                                     Thêm và lưu
+                                    {/* thêm mới sinh viên */}
                                 </Button>
                             </Form.Item>
                         </Row>
