@@ -165,6 +165,7 @@ const TableStudent: React.FC = () => {
         onClose();
     };
 
+
     return (
 
 
@@ -223,25 +224,18 @@ const TableStudent: React.FC = () => {
             >
                 <p>
                     {/* onFinish để thực hiện thêm mới và lưu */}
-                    <Form onFinish={onFinish}>
+                    <Form onFinish={onFinish} layout='vertical'>
+
                         <Row gutter={[16, 16]}>
 
                             <Col span={12}>
-                                Họ và tên
-                            </Col>
-                            <Col span={12}>
-                                Tuổi
-                            </Col>
-                        </Row>
-                        <Row gutter={[16, 16]}>
-
-                            <Col span={12}>
-                                <Form.Item name="name">
+                                {/* Form.Item để bọc ô nhập dữ liệu */}
+                                <Form.Item label="Họ và tên" name="name" rules={[{ required: true }]}>
                                     <Input placeholder="Họ và tên" />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item name="age">
+                                <Form.Item label="Tuổi" name="age" rules={[{ required: true }]}>
                                     <Input type="number" placeholder="Tuổi" />
                                 </Form.Item>
 
@@ -250,32 +244,24 @@ const TableStudent: React.FC = () => {
                         <Row gutter={[16, 16]}>
 
                             <Col span={12}>
-                                Địa chỉ
-                            </Col>
-                            <Col span={12}>
-                                Lớp
-                            </Col>
-                        </Row>
-                        <Row gutter={[16, 16]}>
-
-                            <Col span={12}>
-                                <Form.Item name="address">
+                                <Form.Item label="Địa chỉ" name="address" rules={[{ required: true }]}>
                                     <Input placeholder="Địa chỉ" />
                                 </Form.Item>
 
                             </Col>
                             <Col span={12}>
-                                <Form.Item name="class">
+                                <Form.Item label="Lớp" name="class" rules={[{ required: true }]}>
                                     <Input placeholder="Lớp" />
                                 </Form.Item>
 
                             </Col>
                         </Row>
                         <Row gutter={[16, 16]}>
-
                             <Col span={12}>
+                                <Form.Item label="Chuyên ngành" name="major" rules={[{ required: true }]}>
+                                    <Input placeholder="Chuyên ngành" />
+                                </Form.Item>
 
-                                Chuyên ngành
                             </Col>
                             <Col span={12}>
                                 <div>Giới tính</div>
@@ -286,16 +272,6 @@ const TableStudent: React.FC = () => {
                                     onChange={(checked: boolean) => setGender(checked ? 'nữ' : 'nam')}
                                 />
                             </Col>
-                        </Row>
-                        <Row gutter={[16, 16]}>
-
-                            <Col span={12}>
-                                <Form.Item name="major">
-                                    <Input placeholder="Chuyên ngành" />
-                                </Form.Item>
-
-                            </Col>
-
                         </Row>
 
                         <Row justify="end" style={{ marginTop: 24 }}>
@@ -313,6 +289,7 @@ const TableStudent: React.FC = () => {
                                     }}
                                 >
                                     Thêm và lưu
+                                    {/* thêm mới sinh viên */}
                                 </Button>
                             </Form.Item>
                         </Row>
