@@ -1,4 +1,4 @@
-import { Button, Drawer, Flex, Input, Select, Space, Table, type TableProps, Tag, Col, Row, Form } from 'antd';
+import { Button, Drawer, Flex, Input, Select, Space, Table, type TableProps, Tag, Col, Row, Form, InputNumber } from 'antd';
 import { SaveOutlined, SearchOutlined } from '@ant-design/icons/es/icons/index';
 import React, { useState } from 'react';
 import { Switch } from 'antd';
@@ -12,8 +12,7 @@ interface DataType {
     class: string;
     major: string;
     tags: string[];
-    gender: string;
-    // action: string;
+    gender: boolean;
 }
 
 const columns: TableProps<DataType>['columns'] = [
@@ -21,7 +20,6 @@ const columns: TableProps<DataType>['columns'] = [
         title: 'Tên',
         dataIndex: 'name',
         key: 'name',
-        render: (text) => <a style={{ color: '#333333' }}>{text}</a>
     },
     {
         title: 'Tuổi',
@@ -67,33 +65,11 @@ const columns: TableProps<DataType>['columns'] = [
         title: 'Giới tính',
         key: 'gender',
         dataIndex: 'gender',
-
-        render: (gender) => {
-            let color = '';
-
-            if (gender === 'nữ') {
-                color = 'geekblue';
-            } else {
-                color = 'green';
-            }
-
-            return (
-                <Tag color={color}>
-                    {gender.toUpperCase()}
-                </Tag>
-            );
-        },
+        render: (gender) =>
+            <Tag color={gender ? 'geekblue' : 'green'}>
+                {gender ? 'NỮ' : 'NAM'}
+            </Tag>
     },
-    // {
-    //     title: 'Action',
-    //     key: 'action',
-    //     render: (_,) => (
-    //         <Space size="medium">
-    //             <a>Hoạt động </a>
-    //             <a>Bảo lưu</a>
-    //         </Space>
-    //     ),
-    // },
 ];
 
 const initialData: DataType[] = [
@@ -106,8 +82,7 @@ const initialData: DataType[] = [
         class: '10A1',
         major: 'Công nghệ thông tin',
         tags: ['Lập trình viên'],
-        gender: 'nam',
-        // action: 'Hoạt động',
+        gender: false,
     },
     {
         key: '2',
@@ -118,8 +93,7 @@ const initialData: DataType[] = [
         class: '10A2',
         major: 'Kinh tế',
         tags: ['Kinh Doanh'],
-        gender: 'nữ',
-        // action: 'Bảo Lưu',
+        gender: false,
     },
     {
         key: '3',
@@ -130,8 +104,7 @@ const initialData: DataType[] = [
         class: '10A3',
         major: 'Sư phạm',
         tags: ['Giáo viên'],
-        gender: 'nam',
-        // action: 'Hoat động',
+        gender: true,
     },
 ];
 
@@ -146,20 +119,13 @@ const TableStudent: React.FC = () => {
         setOpen(false);
     };
     const [data, setData] = useState<DataType[]>(initialData);
-    const [gender, setGender] = useState<string>('nữ');
-    // Hàm xử lý lưu dữ liệu Form vào Table
     const onFinish = (values: any) => {
         const newStudent: DataType = {
+            ...values,
             key: Date.now().toString(),
             id: `SV00${data.length + 1}`,
-            name: values.name,
-            age: Number(values.age) || 0,
-            address: values.address || '',
-            class: values.class || '',
-            major: values.major || '',
             tags: ['Mới'],
-            gender: values.gender ? 'nam' : 'nữ', // Switch: true = 'nữ', false = 'nam'
-        };
+        }
 
         setData([...data, newStudent]);
         onClose();
@@ -167,145 +133,120 @@ const TableStudent: React.FC = () => {
 
 
     return (
-
-
         <div style={{ padding: 16 }}>
-            <Space style={{ marginBottom: 16, width: '100%' }} size="middle">
-                {/* 1. Ô Nhập tên đơn vị */}
-                <Input
-                    placeholder="Nhập họ tên sinh viên"
-                    style={{ width: 300 }}
-                />
-
-                <Select /*ô tìm kiếm*/
-                    placeholder="Chọn lớp"
-                    style={{ width: 300 }}
-                    allowClear
-                    options={[
-                        { value: '1', label: '10A1' },
-                        { value: '2', label: '10A2' },
-                        { value: '3', label: '10A3' },
-                    ]}
-                />
-                <Button
-                    type="primary"
-                    icon={<SearchOutlined />}
-                    style={{ backgroundColor: '#2056bb', borderColor: '#1d8f75' }}
-                >
-                    Tìm kiếm
-                </Button>
-
-            </Space>
-            <>
-                <Flex justify="flex-end" style={{ marginBottom: 10 }}>
-                    <Button type="primary" onClick={showDrawer}>
-                        Thêm mới SV
-                    </Button>
-                </Flex>
-                <Drawer
-                    title="Basic Drawer"
-                    closable={{ 'aria-label': 'Close Button' }}
-                    onClose={onClose}
-                    open={open}
-                >
-                </Drawer>
-            </>
-
+            <Row gutter={[16, 16]}>
+                <Col span={8}>
+                    <Input placeholder="Nhập họ tên sinh viên" style={{ width: '100%' }} />
+                </Col>
+                <Col span={8}>
+                    <Select
+                        placeholder="Chọn lớp"
+                        style={{ width: '100%' }}
+                        allowClear
+                        options={[
+                            { value: '10A1', label: '10A1' },
+                            { value: '10A1', label: '10A2' },
+                            { value: '10A1', label: '10A3' },
+                        ]}
+                    />
+                </Col>
+                <Col span={8}>
+                    <Space>
+                        <Button
+                            type="primary"
+                            icon={<SearchOutlined />}
+                            style={{ backgroundColor: '#2056bb', borderColor: '#1d8f75' }}
+                        >
+                            Tìm kiếm
+                        </Button>
+                        <Button type="primary" onClick={showDrawer}>
+                            Thêm mới SV
+                        </Button>
+                    </Space>
+                </Col>
+            </Row>
             <Table<DataType> columns={columns} dataSource={data} />
             <Drawer
                 title="Thêm mới sinh viên"
                 placement="right"
-                width={450}
+                size={450}
                 open={open}
                 onClose={onClose}
-                styles={{
-                    body: { paddingTop: 16 }, // Giảm khoảng cách lề trên xuống còn 12px (mặc định là 24px)
-                }}
             >
-                <p>
-                    {/* onFinish để thực hiện thêm mới và lưu */}
-                    <Form onFinish={onFinish} layout='vertical'>
-
-                        <Row gutter={[16, 16]}>
-
-                            <Col span={12}>
-                                {/* Form.Item để bọc ô nhập dữ liệu */}
-                                <Form.Item label="Họ và tên" name="name" rules={[{ required: true }]}>
-                                    <Input placeholder="Họ và tên" />
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item label="Tuổi" name="age" rules={[{ required: true }]}>
-                                    <Input type="number" placeholder="Tuổi" />
-                                </Form.Item>
-
-                            </Col>
-                        </Row>
-                        <Row gutter={[16, 16]}>
-
-                            <Col span={12}>
-                                <Form.Item label="Địa chỉ" name="address" rules={[{ required: true }]}>
-                                    <Input placeholder="Địa chỉ" />
-                                </Form.Item>
-
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item label="Lớp" name="class" rules={[{ required: true }]}>
-                                    <Input placeholder="Lớp" />
-                                </Form.Item>
-
-                            </Col>
-                        </Row>
-                        <Row gutter={[16, 16]}>
-                            <Col span={12}>
-                                <Form.Item label="Chuyên ngành" name="major" rules={[{ required: true }]}>
-                                    <Input placeholder="Chuyên ngành" />
-                                </Form.Item>
-
-                            </Col>
-                            <Col span={12}>
-                                <div>Giới tính</div>
+                <Form onFinish={onFinish} layout="vertical">
+                    <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="name"
+                                label="Họ và tên"
+                                rules={[{ required: true, message: 'Vui lòng nhập họ và tên!' }]}
+                            >
+                                <Input placeholder="Họ và tên" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="age" label="Tuổi">
+                                <InputNumber placeholder="Tuổi" style={{ width: '100%' }} min={0} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <Form.Item name="address" label="Địa chỉ">
+                                <Input placeholder="Địa chỉ" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="class" label="Lớp">
+                                <Select
+                                    placeholder="Chọn lớp"
+                                    allowClear
+                                    options={[
+                                        { value: '10A1', label: '10A1' },
+                                        { value: '10A1', label: '10A2' },
+                                        { value: '10A1', label: '10A3' },
+                                    ]}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <Form.Item name="major" label="Chuyên ngành">
+                                <Input placeholder="Chuyên ngành" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="gender" label="Giới tính" initialValue={true}>
                                 <Switch
-                                    checked={gender === 'nữ'}
                                     checkedChildren="Nữ"
                                     unCheckedChildren="Nam"
-                                    onChange={(checked: boolean) => setGender(checked ? 'nữ' : 'nam')}
                                 />
-                            </Col>
-                        </Row>
-
-                        <Row justify="end" style={{ marginTop: 24 }}>
-                            <Form.Item style={{ marginBottom: 0 }}>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    icon={<SaveOutlined />}
-                                    style={{
-                                        backgroundColor: '#366cf3',
-                                        borderColor: '#366cf3',
-                                        borderRadius: 6,
-                                        paddingLeft: 20,
-                                        paddingRight: 20,
-                                    }}
-                                >
-                                    Thêm và lưu
-                                    {/* thêm mới sinh viên */}
-                                </Button>
                             </Form.Item>
-                        </Row>
-                    </Form>
-
-
-                </p>
+                        </Col>
+                    </Row>
+                    <Row justify="end">
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                icon={<SaveOutlined />}
+                                style={{
+                                    backgroundColor: '#366cf3',
+                                    borderColor: '#366cf3',
+                                    borderRadius: 6,
+                                    paddingLeft: 20,
+                                    paddingRight: 20,
+                                }}
+                            >
+                                Thêm và lưu
+                            </Button>
+                        </Form.Item>
+                    </Row>
+                </Form>
             </Drawer>
-
         </div>
-
-
-
     );
 }
-
-
 
 export default TableStudent;
