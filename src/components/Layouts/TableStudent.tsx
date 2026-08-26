@@ -1,7 +1,8 @@
-import { Button, Drawer, Flex, Input, Select, Space, Table, type TableProps, Tag, Col, Row, Form, InputNumber } from 'antd';
-import { SaveOutlined, SearchOutlined } from '@ant-design/icons/es/icons/index';
+import { Button, Flex, Input, Select, Space, Table, type TableProps, Tag, Col, Row } from 'antd';
+import { SearchOutlined } from '@ant-design/icons/es/icons/index';
 import React, { useState } from 'react';
-import { Switch } from 'antd';
+// import { Switch } from 'antd';
+import StudentDrawer from "./StudentDrawer";
 
 interface DataType {
     key: string;
@@ -15,62 +16,63 @@ interface DataType {
     gender: boolean;
 }
 
-const columns: TableProps<DataType>['columns'] = [
-    {
-        title: 'Tên',
-        dataIndex: 'name',
-        key: 'name',
-    },
-    {
-        title: 'Tuổi',
-        dataIndex: 'age',
-        key: 'age',
-    },
-    {
-        title: 'Lớp',
-        dataIndex: 'class',
-        key: 'class',
-    },
-    {
-        title: 'Địa chỉ',
-        dataIndex: 'address',
-        key: 'address',
-    },
-    {
-        title: 'Chuyên ngành',
-        dataIndex: 'major',
-        key: 'major',
-    },
-    {
-        title: 'Ghi Chú',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
-            <Flex gap="small" align="middle-center" wrap>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'kawaii') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </Flex>
-        ),
-    },
-    {
-        title: 'Giới tính',
-        key: 'gender',
-        dataIndex: 'gender',
-        render: (gender) =>
-            <Tag color={gender ? 'geekblue' : 'green'}>
-                {gender ? 'NỮ' : 'NAM'}
-            </Tag>
-    },
-];
+// const columns: TableProps<DataType>['columns'] = [
+//     {
+//         title: 'Tên',
+//         dataIndex: 'name',
+//         key: 'name',
+//     },
+//     {
+//         title: 'Tuổi',
+//         dataIndex: 'age',
+//         key: 'age',
+//     },
+//     {
+//         title: 'Lớp',
+//         dataIndex: 'class',
+//         key: 'class',
+//     },
+//     {
+//         title: 'Địa chỉ',
+//         dataIndex: 'address',
+//         key: 'address',
+//     },
+//     {
+//         title: 'Chuyên ngành',
+//         dataIndex: 'major',
+//         key: 'major',
+//     },
+//     {
+//         title: 'Ghi Chú',
+//         key: 'tags',
+//         dataIndex: 'tags',
+//         render: (_, { tags }) => (
+//             <Flex gap="small" align="middle-center" wrap>
+//                 {tags.map((tag) => {
+//                     let color = tag.length > 5 ? 'geekblue' : 'green';
+//                     if (tag === 'kawaii') {
+//                         color = 'volcano';
+//                     }
+//                     return (
+//                         <Tag color={color} key={tag}>
+//                             {tag.toUpperCase()}
+//                         </Tag>
+//                     );
+//                 })}
+//             </Flex>
+//         ),
+//     },
+//     {
+//         title: 'Giới tính',
+//         key: 'gender',
+//         dataIndex: 'gender',
+//         render: (gender) =>
+//             <Tag color={gender ? 'geekblue' : 'green'}>
+//                 {gender ? 'NỮ' : 'NAM'}
+//             </Tag>
+//     },
+
+// ];
 
 const initialData: DataType[] = [
     {
@@ -109,31 +111,133 @@ const initialData: DataType[] = [
 ];
 
 const TableStudent: React.FC = () => {
+    const columns: TableProps<DataType>['columns'] = [
+        {
+            title: 'Tên',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Tuổi',
+            dataIndex: 'age',
+            key: 'age',
+        },
+        {
+            title: 'Lớp',
+            dataIndex: 'class',
+            key: 'class',
+        },
+        {
+            title: 'Địa chỉ',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Chuyên ngành',
+            dataIndex: 'major',
+            key: 'major',
+        },
+        {
+            title: 'Ghi Chú',
+            key: 'tags',
+            dataIndex: 'tags',
+            render: (_, { tags }) => (
+                <Flex gap="small" align="middle-center" wrap>
+                    {tags.map((tag) => {
+                        let color = tag.length > 5 ? 'geekblue' : 'green';
+                        if (tag === 'kawaii') {
+                            color = 'volcano';
+                        }
+                        return (
+                            <Tag color={color} key={tag}>
+                                {tag.toUpperCase()}
+                            </Tag>
+                        );
+                    })}
+                </Flex>
+            ),
+        },
+        {
+            title: 'Giới tính',
+            key: 'gender',
+            dataIndex: 'gender',
+            render: (gender) =>
+                <Tag color={gender ? 'geekblue' : 'green'}>
+                    {gender ? 'NỮ' : 'NAM'}
+                </Tag>
+        },
+        {
+            title: 'Chỉnh sửa',
+            key: 'action',
+            render: (_, record) => (
+                <Button
+                    type="link"
+                    onClick={() => handleEdit(record)}
+                >
+                    Sửa
+                </Button>
+            ),
+        },
+
+    ]; // đưa const column vào Table có thể nhìn thấy handle Edit và xử lý
+
+
     const [open, setOpen] = useState(false);
 
     const showDrawer = () => {
         setOpen(true);
+        setEditStudent(null); // chắc chắn ko có ai  khi bấm thêm mới
     };
 
     const onClose = () => {
         setOpen(false);
+        setEditStudent(null)
     };
     const [data, setData] = useState<DataType[]>(initialData);
-    const onFinish = (values: any) => {
-        const newStudent: DataType = {
-            ...values,
-            key: Date.now().toString(),
-            id: `SV00${data.length + 1}`,
-            tags: ['Mới'],
-        }
-
-        setData([...data, newStudent]);
-        onClose();
+    const [editStudent, setEditStudent] = useState<DataType | null>(null); //edit là sửa SV, nếu null thì ko có ai => chế độ thêm
+    //hàm xử lý chỉnh sửa SV
+    const handleEdit = (student: DataType) => {
+        setEditStudent(student); //lưu SV đang muốn sửa
+        setOpen(true); //mở drawer
     };
+    const onFinish = (values: any) => {
+
+        // Nếu đang sửa sinh viên
+        if (editStudent) { // đúng => cập nhật
+
+            const updatedData = data.map((student) => //duyệt qua từng SV và tìm đúng SV đang sửa
+                student.key === editStudent.key //kiểm tra
+                    ? {
+                        ...student, //dữ liệu SV cũ
+                        ...values, //sửa form và đưa vào thông tin mới
+                    }
+                    : student
+            );
+
+            setData(updatedData); //thay dữ liệu cũ bằng dữ liệu mới
+            onClose();
+
+        } else {
+
+            // Nếu thêm sinh viên mới
+            const newStudent: DataType = {
+                ...values,
+                key: Date.now().toString(),
+                id: `SV00${data.length + 1}`,
+                tags: ['Mới'],
+            };
+
+            setData([...data, newStudent]);
+            onClose();
+        }
+    };
+
+
 
 
     return (
         <div style={{ padding: 16 }}>
+            {/* thanh tìm kiếm */}
             <Row gutter={[16, 16]}>
                 <Col span={8}>
                     <Input placeholder="Nhập họ tên sinh viên" style={{ width: '100%' }} />
@@ -159,6 +263,7 @@ const TableStudent: React.FC = () => {
                         >
                             Tìm kiếm
                         </Button>
+                        {/* nút thêm mới */}
                         <Button type="primary" onClick={showDrawer}>
                             Thêm mới SV
                         </Button>
@@ -166,86 +271,15 @@ const TableStudent: React.FC = () => {
                 </Col>
             </Row>
             <Table<DataType> columns={columns} dataSource={data} />
-            <Drawer
-                title="Thêm mới sinh viên"
-                placement="right"
-                size={450}
+
+            <StudentDrawer
                 open={open}
                 onClose={onClose}
-            >
-                <Form onFinish={onFinish} layout="vertical">
-                    <Row gutter={[16, 16]}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="name"
-                                label="Họ và tên"
-                                rules={[{ required: true, message: 'Vui lòng nhập họ và tên!' }]}
-                            >
-                                <Input placeholder="Họ và tên" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item name="age" label="Tuổi">
-                                <InputNumber placeholder="Tuổi" style={{ width: '100%' }} min={0} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={[16, 16]}>
-                        <Col span={12}>
-                            <Form.Item name="address" label="Địa chỉ">
-                                <Input placeholder="Địa chỉ" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item name="class" label="Lớp">
-                                <Select
-                                    placeholder="Chọn lớp"
-                                    allowClear
-                                    options={[
-                                        { value: '10A1', label: '10A1' },
-                                        { value: '10A1', label: '10A2' },
-                                        { value: '10A1', label: '10A3' },
-                                    ]}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={[16, 16]}>
-                        <Col span={12}>
-                            <Form.Item name="major" label="Chuyên ngành">
-                                <Input placeholder="Chuyên ngành" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item name="gender" label="Giới tính" initialValue={true}>
-                                <Switch
-                                    checkedChildren="Nữ"
-                                    unCheckedChildren="Nam"
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row justify="end">
-                        <Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                icon={<SaveOutlined />}
-                                style={{
-                                    backgroundColor: '#366cf3',
-                                    borderColor: '#366cf3',
-                                    borderRadius: 6,
-                                    paddingLeft: 20,
-                                    paddingRight: 20,
-                                }}
-                            >
-                                Thêm và lưu
-                            </Button>
-                        </Form.Item>
-                    </Row>
-                </Form>
-            </Drawer>
+                onFinish={onFinish}
+                student={editStudent}
+            />
         </div>
+
     );
 }
 
