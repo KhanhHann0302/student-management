@@ -1,7 +1,7 @@
 import React from 'react';
 import { ClusterOutlined, DeploymentUnitOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, ConfigProvider, Layout, Menu, theme } from 'antd';
+import { ConfigProvider, Layout, Menu, theme } from 'antd';
 import { useNavigate, useLocation } from "react-router-dom";
 
 //layout chính
@@ -89,23 +89,19 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       }}
     >
       <Layout>
-        <Header style={{ display: 'flex', alignItems: 'center' }}>
+        <Header style={{ display: 'flex', alignItems: 'center', width: '100%', minWidth: 200, }}>
           <div className="demo-logo" />
           <Menu
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={['2']}
             items={items1}
-            style={{ flex: 1, minWidth: 0 }}
+            style={{ flex: 1, minWidth: 100, width: '100%' }}
             onClick={handleMenuClick}
           />
         </Header>
-        <div style={{ padding: '0 48px' }}>
-          <Breadcrumb
-            style={{ margin: '16px 0' }}
-          />
           <Layout
-            style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
+            style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG, minHeight: '100vh', width: '100vw' }}
           >
             {isQuanLy && (
               <Sider style={{ background: colorBgContainer }} width={200}>
@@ -120,8 +116,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             )}
             <Content style={{ padding: '0 24px', minHeight: 280 }}> {children}</Content>
           </Layout>
-        </div>
-        <Footer style={{ textAlign: 'center' }}>        </Footer>
+        <Footer style={{ textAlign: 'center' }}></Footer>
       </Layout>
     </ConfigProvider>
   );
