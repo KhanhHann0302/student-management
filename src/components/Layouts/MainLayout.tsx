@@ -3,7 +3,6 @@ import { ClusterOutlined, DeploymentUnitOutlined, SolutionOutlined, UserOutlined
 import type { MenuProps } from 'antd';
 import { ConfigProvider, Layout, Menu, theme } from 'antd';
 import { useNavigate, useLocation } from "react-router-dom";
-
 //layout chính
 const { Header, Content, Footer, Sider } = Layout;;
 const items1: MenuProps['items'] = [
@@ -57,6 +56,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   //khai báo các Hook điều hướng (Hook là các hàm đặc biệt bắt đầu bằng "use" cho phép móc các tính năng vào vòng đời component mà ko cần viết React Class Component)
   const navigate = useNavigate(); //chuyển hướng trang này sang trang khác mà ko cần tải lại
   const location = useLocation(); //lấy thông tin đường dẫn URL
+  const searchParams = new URLSearchParams(location.search);
+  const currentTab = searchParams.get('tab') || 'a1';
   const isQuanLy = location.pathname === '/quan-ly'; //kiểm tra link có ko
   const handleMenuClick = ({ key }: { key: string }) => { //xử lý khi bấm menu
     if (key === '1') {
@@ -68,6 +69,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     if (key === '3') {
       navigate('/bao-cao');
     }
+  };
+
+  const handleSiderClick = ({ key }: { key: string }) => {
+    navigate(`/quan-ly?tab=${key}`);
   };
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -93,7 +98,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={[location.pathname]}
             items={items1}
             style={{ flex: 1, minWidth: 100, width: '100%' }}
             onClick={handleMenuClick}
@@ -106,8 +111,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             <Sider style={{ background: colorBgContainer }} width={200}>
               <Menu
                 mode="inline"
-                selectedKeys={[location.pathname]}
-                // defaultOpenKeys={['sub1']}
+                selectedKeys={[currentTab]} // Highlight đúng menu theo URL
+                onClick={handleSiderClick}
                 style={{ height: '100%' }}
                 items={items2}
               />

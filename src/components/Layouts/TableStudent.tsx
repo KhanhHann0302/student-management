@@ -39,7 +39,7 @@ const initialData: DataType[] = [
     },
 ];
 const TableStudent: React.FC = () => {
-     // đưa const column vào Table có thể nhìn thấy handle Edit và xử lý
+    // đưa const column vào Table có thể nhìn thấy handle Edit và xử lý
     const columns: TableProps<DataType>['columns'] = [
         {
             title: 'Tên',
@@ -139,7 +139,7 @@ const TableStudent: React.FC = () => {
         setOpen(false);
         setEditStudent(null)
     };
-    const [data, setData] = useState<DataType[]>(initialData); 
+    const [data, setData] = useState<DataType[]>(initialData);
     const [searchText, setSearchText] = useState<string>(''); //tìm kiếm nội dung khi nhập
     const [selectedClass, setSelectedClass] = useState<string | undefined>(undefined); //hiển thị lớp khi người dùng chọn
     const [searchName, setSearchName] = useState<string>(''); //tìm kiếm sau tên sau khi bấm nút
@@ -154,7 +154,7 @@ const TableStudent: React.FC = () => {
         setEditStudent(student); //lưu SV đang muốn sửa
         setOpen(true); //mở drawer
     };
-     const handleSearch = () => { //chỉ lọc kq khi bấm nút tìm kiếm
+    const handleSearch = () => { //chỉ lọc kq khi bấm nút tìm kiếm
         setSearchName(searchText);
         setSearchClass(selectedClass);
     };
