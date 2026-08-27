@@ -1,33 +1,29 @@
 import React from 'react';
 import { ClusterOutlined, DeploymentUnitOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, ConfigProvider, Layout, Menu, theme } from 'antd';
-import Link from 'antd/es/typography/Link';
+import { ConfigProvider, Layout, Menu, theme } from 'antd';
+import { useNavigate, useLocation } from "react-router-dom";
 
 //layout chính
-const { Header, Content, Footer, Sider } = Layout;
-//thanh menu ngang trên cùng
+const { Header, Content, Footer, Sider } = Layout;;
 const items1: MenuProps['items'] = [
   {
     key: '1',
-
-    label: <Link href="/trang-chu">Trang chủ</Link>,
+    label: 'Trang chủ',
   },
   {
     key: '2',
-    label: <Link href="/quan-ly">Quản Lý</Link>,
+    label: 'Quản Lý',
+
   },
   {
     key: '3',
-    label: <Link href="/bao-cao">Báo Cáo</Link>,
+    label: 'Báo Cáo',
   },
 ];
 interface MainLayoutProps {
   children?: React.ReactNode;
 }
-
-
-<div></div>
 const items2: MenuProps['items'] = [
   {
 
@@ -50,35 +46,33 @@ const items2: MenuProps['items'] = [
     key: 'a3',
     icon: <SolutionOutlined />,
     label: 'Quản Lý Tài Khoản',
-    // children: [
-    //   {
-    //     key: '1',
-    //     label: 'Danh sách giảng viên',
-    //   },
-    // ]
   },
   {
     key: 'a4',
     icon: <DeploymentUnitOutlined />,
     label: 'Phân Quyền',
-    // children: [
-    //   {
-    //     key: '1',
-    //     label: 'Danh sách giảng viên',
-    //   },
-    // ]
   },
-
 ]
-
-
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+  //khai báo các Hook điều hướng (Hook là các hàm đặc biệt bắt đầu bằng "use" cho phép móc các tính năng vào vòng đời component mà ko cần viết React Class Component)
+  const navigate = useNavigate(); //chuyển hướng trang này sang trang khác mà ko cần tải lại
+  const location = useLocation(); //lấy thông tin đường dẫn URL
+  const isQuanLy = location.pathname === '/quan-ly'; //kiểm tra link có ko
+  const handleMenuClick = ({ key }: { key: string }) => { //xử lý khi bấm menu
+    if (key === '1') {
+      navigate('/trang-chu');
+    }
+    if (key === '2') {
+      navigate('/quan-ly');
+    }
+    if (key === '3') {
+      navigate('/bao-cao');
+    }
+  };
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
   // const currentYear = new Date().getFullYear();
-
   return (
     <ConfigProvider
       theme={{
@@ -93,42 +87,37 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         },
       }}
     >
-
       <Layout>
-        <Header style={{ display: 'flex', alignItems: 'center' }}>
+        <Header style={{ display: 'flex', alignItems: 'center', width: '100%', minWidth: 200, }}>
           <div className="demo-logo" />
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['2']}
+            defaultSelectedKeys={['1']}
             items={items1}
-            style={{ flex: 1, minWidth: 0 }}
+            style={{ flex: 1, minWidth: 100, width: '100%' }}
+            onClick={handleMenuClick}
           />
         </Header>
-        <div style={{ padding: '0 48px' }}>
-          <Breadcrumb
-            style={{ margin: '16px 0' }}
-
-          />
-          <Layout
-            style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
-          >
+        <Layout
+          style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG, minHeight: '100vh', width: '100vw' }}
+        >
+          {isQuanLy && (
             <Sider style={{ background: colorBgContainer }} width={200}>
               <Menu
                 mode="inline"
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
+                selectedKeys={[location.pathname]}
+                // defaultOpenKeys={['sub1']}
                 style={{ height: '100%' }}
                 items={items2}
               />
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280 }}> {children}</Content>
-          </Layout>
-        </div>
-        <Footer style={{ textAlign: 'center' }}>        </Footer>
+          )}
+          <Content style={{ padding: '0 24px', minHeight: 280 }}> {children}</Content>
+        </Layout>
+        <Footer style={{ textAlign: 'center' }}></Footer>
       </Layout>
     </ConfigProvider>
   );
 };
-
 export default MainLayout;
