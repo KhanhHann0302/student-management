@@ -39,6 +39,7 @@ const initialData: DataType[] = [
     },
 ];
 const TableStudent: React.FC = () => {
+     // đưa const column vào Table có thể nhìn thấy handle Edit và xử lý
     const columns: TableProps<DataType>['columns'] = [
         {
             title: 'Tên',
@@ -128,17 +129,21 @@ const TableStudent: React.FC = () => {
             ),
         },
 
-    ]; // đưa const column vào Table có thể nhìn thấy handle Edit và xử lý
-    const [open, setOpen] = useState(false);
+    ];
+    const [open, setOpen] = useState(false); //quản lý trạng thái ẩn/hiện của drawer
     const showDrawer = () => {
-        setOpen(true);
+        setOpen(true); //hàm thay dổi giá trị, khi gọi open -> true -> drawer xuất hiện
         setEditStudent(null); // chắc chắn ko có ai  khi bấm thêm mới
     };
     const onClose = () => {
         setOpen(false);
         setEditStudent(null)
     };
-    const [data, setData] = useState<DataType[]>(initialData);
+    const [data, setData] = useState<DataType[]>(initialData); 
+    const [searchText, setSearchText] = useState<string>(''); //tìm kiếm nội dung khi nhập
+    const [selectedClass, setSelectedClass] = useState<string | undefined>(undefined); //hiển thị lớp khi người dùng chọn
+    const [searchName, setSearchName] = useState<string>(''); //tìm kiếm sau tên sau khi bấm nút
+    const [searchClass, setSearchClass] = useState<string | undefined>(undefined); //tìm lớp sau khi bấm nút
     //hàm Xoá thông tin SV
     const handleDelete = (student: DataType) => { //nhận thông tin SV cần xoá
         setData(data.filter(item => item.key !== student.key)); //thực hiện xoá, giữ key các SV khác với SV đang chọn => cập nhật lại Bảng
@@ -149,6 +154,17 @@ const TableStudent: React.FC = () => {
         setEditStudent(student); //lưu SV đang muốn sửa
         setOpen(true); //mở drawer
     };
+     const handleSearch = () => { //chỉ lọc kq khi bấm nút tìm kiếm
+        setSearchName(searchText);
+        setSearchClass(selectedClass);
+    };
+    const filteredData = data.filter((student) => { //lọc dữ liệu
+        const matchName = student.name
+            .toLowerCase()
+            .includes(searchName.toLowerCase().trim());
+        const matchClass = searchClass ? student.class === searchClass : true; //nếu ko chọn lớp thì bỏ qua (true), nếu chọn thì so sánh lớp
+        return matchName && matchClass;
+    });
     const onFinish = (values: any) => {
         // Nếu đang sửa sinh viên
         if (editStudent) { // đúng => cập nhật
@@ -179,24 +195,30 @@ const TableStudent: React.FC = () => {
             {/* thanh tìm kiếm */}
             <Row gutter={[16, 16]}>
                 <Col span={8}>
-                    <Input placeholder="Nhập họ tên sinh viên" style={{ width: '100%' }} />
+                    <Input placeholder="Nhập họ tên sinh viên" style={{ width: '100%' }}
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)} />
                 </Col>
                 <Col span={8}>
                     <Select
                         placeholder="Chọn lớp"
                         style={{ width: '100%' }}
                         allowClear
-                        options={[
-                            { value: '10A1', label: '10A1' },
-                            { value: '10A1', label: '10A2' },
-                            { value: '10A1', label: '10A3' },
-                        ]}
+                        value={selectedClass}
+                        onChange={(value) => setSelectedClass(value)}
+                        options={
+                            [
+                                { value: '10A1', label: '10A1' },
+                                { value: '10A2', label: '10A2' },
+                                { value: '10A3', label: '10A3' },
+                            ]}
                     />
                 </Col>
                 <Col span={8}>
                     <Space>
                         <Button
                             type="primary"
+                            onClick={handleSearch} //gọi hàm handleSearch
                             icon={<SearchOutlined />}
                             style={{ backgroundColor: '#2056bb', borderColor: '#1d8f75' }}
                         >
@@ -209,7 +231,7 @@ const TableStudent: React.FC = () => {
                     </Space>
                 </Col>
             </Row>
-            <Table<DataType> columns={columns} dataSource={data} />
+            <Table<DataType> columns={columns} dataSource={filteredData} />
             <StudentDrawer
                 open={open}
                 onClose={onClose}

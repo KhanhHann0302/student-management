@@ -1,5 +1,5 @@
 import TableStudent from "../components/Layouts/TableStudent";
-const QuanLy = () => {
+const Management = () => {
     return (
         <div>
             <TableStudent />
@@ -7,4 +7,4 @@ const QuanLy = () => {
         </div>
     );
 };
-export default QuanLy;
+export default Management;

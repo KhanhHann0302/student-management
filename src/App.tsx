@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/Layouts/MainLayout';
 import Home from './Page/HomePage';
 import Management from './Page/Management';
@@ -12,6 +12,7 @@ const App: React.FC = () => {
             path="/trang-chu"
             element={<Home />}
           />
+          <Route path="/" element={<Navigate to="/trang-chu" replace />} />
           <Route
             path="/quan-ly"
             element={<Management />}

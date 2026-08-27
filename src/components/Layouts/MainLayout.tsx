@@ -24,7 +24,6 @@ const items1: MenuProps['items'] = [
 interface MainLayoutProps {
   children?: React.ReactNode;
 }
-<div></div>
 const items2: MenuProps['items'] = [
   {
 
@@ -94,28 +93,28 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['2']}
+            defaultSelectedKeys={['1']}
             items={items1}
             style={{ flex: 1, minWidth: 100, width: '100%' }}
             onClick={handleMenuClick}
           />
         </Header>
-          <Layout
-            style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG, minHeight: '100vh', width: '100vw' }}
-          >
-            {isQuanLy && (
-              <Sider style={{ background: colorBgContainer }} width={200}>
-                <Menu
-                  mode="inline"
-                  defaultSelectedKeys={['1']}
-                  // defaultOpenKeys={['sub1']}
-                  style={{ height: '100%' }}
-                  items={items2}
-                />
-              </Sider>
-            )}
-            <Content style={{ padding: '0 24px', minHeight: 280 }}> {children}</Content>
-          </Layout>
+        <Layout
+          style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG, minHeight: '100vh', width: '100vw' }}
+        >
+          {isQuanLy && (
+            <Sider style={{ background: colorBgContainer }} width={200}>
+              <Menu
+                mode="inline"
+                selectedKeys={[location.pathname]}
+                // defaultOpenKeys={['sub1']}
+                style={{ height: '100%' }}
+                items={items2}
+              />
+            </Sider>
+          )}
+          <Content style={{ padding: '0 24px', minHeight: 280 }}> {children}</Content>
+        </Layout>
         <Footer style={{ textAlign: 'center' }}></Footer>
       </Layout>
     </ConfigProvider>
