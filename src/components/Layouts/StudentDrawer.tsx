@@ -1,30 +1,13 @@
 import { Button, Col, Drawer, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
-import { SaveOutlined} from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
 import { useEffect } from 'react';
-
-
-
-export interface DataType {
-    key: string;
-    id: string;
-    name: string;
-    age: number;
-    address: string;
-    class: string;
-    major: string;
-    tags: string[];
-    gender: boolean;
-}
-// const [form] = Form.useForm();
-
+import type { DataType } from '../../models/Student';
 interface StudentDrawerProps {
     open: boolean; //trạng thái đóng mở của drawer
     onClose: () => void; //ẩn drawer
     onFinish: (values: any) => void; // nhận dữ liệu từ Form
     student?: DataType | null; //? có nghĩa là ko bắt buộc truyền. nếu Sửa thì truyền SV vào, nếu Thêm mới thì sẽ ko truyền
 }
-
-
 const StudentDrawer = ({ //khai báo component nhận 4 vào dữ liệu (props)
     open,
     onClose,
@@ -32,7 +15,6 @@ const StudentDrawer = ({ //khai báo component nhận 4 vào dữ liệu (props)
     student,
 }: StudentDrawerProps) => {
     const [form] = Form.useForm();
-
     useEffect(() => { //khi dữ liệu thay đổi => thực hiện hành động => student thay đổi -> kiểm tra và cập nhật
         if (student) { //có SV đang đc chọn để sửa ko
             form.setFieldsValue(student); // đưa dữ liệu vào Form thông tin cũ
@@ -123,7 +105,4 @@ const StudentDrawer = ({ //khai báo component nhận 4 vào dữ liệu (props)
         </Drawer>
     );
 };
-
-
-
 export default StudentDrawer;

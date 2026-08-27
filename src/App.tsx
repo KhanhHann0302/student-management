@@ -1,17 +1,10 @@
 
 // import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/Layouts/MainLayout';
-import TableStudent from './components/Layouts/TableStudent';
-;
-// 1. Khai báo kiểu dữ liệu cho 1 Student
-// interface Student {
-//   key: string;
-//   id: string;
-//   name: string;
-//   age: number;
-//   address: string;
-// }
-
+// import TableStudent from './components/Layouts/TableStudent';
+import Home from './Page/HomePage';
+import Management from './Page/Management';
 // 2. Định nghĩa cấu hình các Cột 
 // const columns: ColumnsType<Student> = [
 //   {
@@ -36,10 +29,6 @@ import TableStudent from './components/Layouts/TableStudent';
 //     key: 'address',
 //   },
 // ];
-
-
-
-
 // const [open, setOpen] = useState(false); // khai báo state để điều khiển Modal
 // 3. Khai báo state chứa DỮ LIỆU học sinh
 // const [students, setStudents] = useState<Student[]>([
@@ -58,17 +47,22 @@ import TableStudent from './components/Layouts/TableStudent';
 //     address: 'TP.HCM',
 //   },
 // ]);
-
 const App: React.FC = () => {
   return (
-    <MainLayout>
-      {/* <Routes> */}
-      {/* <Route path="/homepage" element={<TableStudent />} /> */}
-      {/* <Route path="/quan-ly" element={<TableStudent />} />
-      </Routes> */}
-      <TableStudent />
-    </MainLayout>
+    <BrowserRouter>
+      <MainLayout>
+        <Routes>
+          <Route
+            path="/trang-chu"
+            element={<Home />}
+          />
+          <Route
+            path="/quan-ly"
+            element={<Management />}
+          />
+        </Routes>
+      </MainLayout>
+    </BrowserRouter>
   );
 };
-
 export default App;

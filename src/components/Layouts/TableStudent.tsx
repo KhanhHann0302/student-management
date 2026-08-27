@@ -1,79 +1,8 @@
-import { Button, Flex, Input, Select, Space, Table, type TableProps, Tag, Col, Row } from 'antd';
-import { SearchOutlined } from '@ant-design/icons/es/icons/index';
+import { Button, Flex, Input, Select, Space, Table, type TableProps, Tag, Col, Row, Popconfirm } from 'antd'; //popconfirm là hộp hỏi xác nhận
+import { SearchOutlined, DeleteOutlined } from '@ant-design/icons/es/icons/index';
 import React, { useState } from 'react';
-// import { Switch } from 'antd';
 import StudentDrawer from "./StudentDrawer";
-
-interface DataType {
-    key: string;
-    id: string;
-    name: string;
-    age: number;
-    address: string;
-    class: string;
-    major: string;
-    tags: string[];
-    gender: boolean;
-}
-
-// const columns: TableProps<DataType>['columns'] = [
-//     {
-//         title: 'Tên',
-//         dataIndex: 'name',
-//         key: 'name',
-//     },
-//     {
-//         title: 'Tuổi',
-//         dataIndex: 'age',
-//         key: 'age',
-//     },
-//     {
-//         title: 'Lớp',
-//         dataIndex: 'class',
-//         key: 'class',
-//     },
-//     {
-//         title: 'Địa chỉ',
-//         dataIndex: 'address',
-//         key: 'address',
-//     },
-//     {
-//         title: 'Chuyên ngành',
-//         dataIndex: 'major',
-//         key: 'major',
-//     },
-//     {
-//         title: 'Ghi Chú',
-//         key: 'tags',
-//         dataIndex: 'tags',
-//         render: (_, { tags }) => (
-//             <Flex gap="small" align="middle-center" wrap>
-//                 {tags.map((tag) => {
-//                     let color = tag.length > 5 ? 'geekblue' : 'green';
-//                     if (tag === 'kawaii') {
-//                         color = 'volcano';
-//                     }
-//                     return (
-//                         <Tag color={color} key={tag}>
-//                             {tag.toUpperCase()}
-//                         </Tag>
-//                     );
-//                 })}
-//             </Flex>
-//         ),
-//     },
-//     {
-//         title: 'Giới tính',
-//         key: 'gender',
-//         dataIndex: 'gender',
-//         render: (gender) =>
-//             <Tag color={gender ? 'geekblue' : 'green'}>
-//                 {gender ? 'NỮ' : 'NAM'}
-//             </Tag>
-//     },
-
-// ];
-
+import type { DataType } from '../../models/Student';
 const initialData: DataType[] = [
     {
         key: '1',
@@ -109,7 +38,6 @@ const initialData: DataType[] = [
         gender: true,
     },
 ];
-
 const TableStudent: React.FC = () => {
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -169,56 +97,72 @@ const TableStudent: React.FC = () => {
         {
             title: 'Chỉnh sửa',
             key: 'action',
-            render: (_, record) => (
+            render: (_, record) => ( //_ :đại diện cho giá trị hiện tại, record là toàn bộ thông tin SV của dòng đang đc thao tác
                 <Button
                     type="link"
-                    onClick={() => handleEdit(record)}
+                    onClick={() => handleEdit(record)}//nhấn nút gọi hàm handleEdit và truyền SV đang chọn
                 >
                     Sửa
                 </Button>
             ),
         },
+        {
+            title: 'Xóa',
+            key: 'delete',
+            render: (_, record) => (
+                <Popconfirm
+                    title="Xóa thông tin sinh viên"
+                    description={`Bạn có chắc muốn xóa thông tin sinh viên ${record.name}?`}
+                    onConfirm={() => handleDelete(record)}
+                    okText="Có"
+                    cancelText="Không"
+                >
+                    <Button
+                        type="link" onClick={() => handleDelete} //nhấn nút gọi hàm handledelete và truyền SV đang chọn
+                        danger //nút cảnh báo thường có màu đỏ
+                        icon={<DeleteOutlined />}
+                    >
+                        Xóa
+                    </Button>
+                </Popconfirm>
+            ),
+        },
 
     ]; // đưa const column vào Table có thể nhìn thấy handle Edit và xử lý
-
-
     const [open, setOpen] = useState(false);
-
     const showDrawer = () => {
         setOpen(true);
         setEditStudent(null); // chắc chắn ko có ai  khi bấm thêm mới
     };
-
     const onClose = () => {
         setOpen(false);
         setEditStudent(null)
     };
     const [data, setData] = useState<DataType[]>(initialData);
+    //hàm Xoá thông tin SV
+    const handleDelete = (student: DataType) => { //nhận thông tin SV cần xoá
+        setData(data.filter(item => item.key !== student.key)); //thực hiện xoá, giữ key các SV khác với SV đang chọn => cập nhật lại Bảng
+    }
     const [editStudent, setEditStudent] = useState<DataType | null>(null); //edit là sửa SV, nếu null thì ko có ai => chế độ thêm
     //hàm xử lý chỉnh sửa SV
-    const handleEdit = (student: DataType) => {
+    const handleEdit = (student: DataType) => { //nhận thông tin SV cần sửa
         setEditStudent(student); //lưu SV đang muốn sửa
         setOpen(true); //mở drawer
     };
     const onFinish = (values: any) => {
-
         // Nếu đang sửa sinh viên
         if (editStudent) { // đúng => cập nhật
-
             const updatedData = data.map((student) => //duyệt qua từng SV và tìm đúng SV đang sửa
                 student.key === editStudent.key //kiểm tra
-                    ? {
+                    ? { //? : thay cho if else
                         ...student, //dữ liệu SV cũ
                         ...values, //sửa form và đưa vào thông tin mới
                     }
                     : student
             );
-
             setData(updatedData); //thay dữ liệu cũ bằng dữ liệu mới
             onClose();
-
         } else {
-
             // Nếu thêm sinh viên mới
             const newStudent: DataType = {
                 ...values,
@@ -226,15 +170,10 @@ const TableStudent: React.FC = () => {
                 id: `SV00${data.length + 1}`,
                 tags: ['Mới'],
             };
-
             setData([...data, newStudent]);
             onClose();
         }
     };
-
-
-
-
     return (
         <div style={{ padding: 16 }}>
             {/* thanh tìm kiếm */}
@@ -271,7 +210,6 @@ const TableStudent: React.FC = () => {
                 </Col>
             </Row>
             <Table<DataType> columns={columns} dataSource={data} />
-
             <StudentDrawer
                 open={open}
                 onClose={onClose}
@@ -279,8 +217,6 @@ const TableStudent: React.FC = () => {
                 student={editStudent}
             />
         </div>
-
     );
 }
-
 export default TableStudent;
